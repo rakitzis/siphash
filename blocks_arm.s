@@ -136,7 +136,7 @@ blocksloop:
 	MOVM.IA [R0,R1,R2,R3,R4,R5,R6,R7],(R8)
 	RET
 // finalize(d *digest) uint64
-TEXT ·finalize(SB),NOSPLIT,$4-16
+TEXT ·finalize(SB),NOSPLIT,$4-12
 	MOVW	d+0(FP),R8
 	MOVM.IA	(R8),[R0,R1,R2,R3,R4,R5,R6,R7]
 	MOVW	48(R8),R12
@@ -302,6 +302,6 @@ TEXT ·finalize(SB),NOSPLIT,$4-16
 	EOR	R7,R5,R5
 	EOR	R4,R0,R0
 	EOR	R5,R1,R1
-	MOVW	d+0(FP),R8
-	MOVM.IA [R0,R1,R2,R3,R4,R5,R6,R7],(R8)
+	MOVW	R0,ret+4(FP)
+	MOVW	R1,ret+8(FP)
 	RET
