@@ -23,21 +23,18 @@ TEXT ·blocks(SB),4,$0-32
 	MOVQ 8(BX), R10		// R10 = v1
 	MOVQ 16(BX), R11	// R11 = v2
 	MOVQ 24(BX), R12	// R12 = v3
-	MOVQ data+8(FP), DI	// DI = *uint64
-	MOVQ data_len+16(FP), SI// SI = nblocks
-	XORL DX, DX		// DX = index (0)
-	SHRQ $3, SI 		// SI /= 8
+	MOVQ p+8(FP), DI	// DI = *uint64
+	MOVQ p_len+16(FP), SI// SI = nblocks
 body:
-	CMPQ DX, SI
-	JGE  end
-	MOVQ 0(DI)(DX*8), CX	// CX = m
+	MOVQ (DI), CX		// CX = m
+	LEAQ 8(DI), DI
 	XORQ CX, R12
 	ROUND(R9, R10, R11, R12)
 	ROUND(R9, R10, R11, R12)
 	XORQ CX, R9
-	ADDQ $1, DX
-	JMP  body
-end:
+	SUBQ $8, SI
+	JG   body
+
 	MOVQ R9, 0(BX)
 	MOVQ R10, 8(BX)
 	MOVQ R11, 16(BX)
